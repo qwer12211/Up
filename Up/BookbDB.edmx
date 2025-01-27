@@ -1,0 +1,858 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище BookDBModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="ID_Book" />
+          </Key>
+          <Property Name="ID_Book" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BookTitle" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="BookAuthor" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="BookISBN" Type="varchar" MaxLength="17" Nullable="false" />
+          <Property Name="BookPrice" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Genre_ID" Type="int" Nullable="false" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="BookAmount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="ID_Genre" />
+          </Key>
+          <Property Name="ID_Genre" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GenreName" Type="varchar" MaxLength="11" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Positions">
+          <Key>
+            <PropertyRef Name="ID_Position" />
+          </Key>
+          <Property Name="ID_Position" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="PositionName" Type="varchar" MaxLength="30" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Sales">
+          <Key>
+            <PropertyRef Name="ID_Sale" />
+          </Key>
+          <Property Name="ID_Sale" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Store_ID" Type="int" Nullable="false" />
+          <Property Name="Book_ID" Type="int" Nullable="false" />
+          <Property Name="SaleDate" Type="date" Nullable="false" />
+          <Property Name="SaleBookAmount" Type="int" Nullable="false" />
+          <Property Name="Revenue" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="ID_Staff" />
+          </Key>
+          <Property Name="ID_Staff" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StaffSurname" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="StaffName" Type="varchar" MaxLength="25" Nullable="false" />
+          <Property Name="StaffMiddleName" Type="varchar" MaxLength="25" />
+          <Property Name="StaffContact" Type="varchar" MaxLength="11" Nullable="false" />
+          <Property Name="Position_ID" Type="int" Nullable="false" />
+          <Property Name="Store_ID" Type="int" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="ID_Status" />
+          </Key>
+          <Property Name="ID_Status" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StatusName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Stores">
+          <Key>
+            <PropertyRef Name="ID_Store" />
+          </Key>
+          <Property Name="ID_Store" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="StoreAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="StoreContact" Type="varchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StoresBooks">
+          <Key>
+            <PropertyRef Name="ID_StoreBook" />
+          </Key>
+          <Property Name="ID_StoreBook" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Store_ID" Type="int" Nullable="false" />
+          <Property Name="Book_ID" Type="int" Nullable="false" />
+          <Property Name="StoreBookAmount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="StoresSupplier">
+          <Key>
+            <PropertyRef Name="ID_StoresSupplier" />
+          </Key>
+          <Property Name="ID_StoresSupplier" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Store_ID" Type="int" Nullable="false" />
+          <Property Name="Supplier_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="ID_Supplier" />
+          </Key>
+          <Property Name="ID_Supplier" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SupplierName" Type="varchar" MaxLength="20" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Supply">
+          <Key>
+            <PropertyRef Name="ID_Supply" />
+          </Key>
+          <Property Name="ID_Supply" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Book_ID" Type="int" Nullable="false" />
+          <Property Name="BookAmount" Type="int" Nullable="false" />
+          <Property Name="Status_ID" Type="int" Nullable="false" />
+          <Property Name="SupplyDate" Type="date" Nullable="false" />
+          <Property Name="Supplier_ID" Type="int" Nullable="false" />
+          <Property Name="Store_ID" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK__Books__Genre_ID__5FB337D6">
+          <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="ID_Genre" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="Genre_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Books__Status_ID__60A75C0F">
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="Status_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__Book_ID__6E01572D">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__Store_ID__6D0D32F4">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staff__Position___5AEE82B9">
+          <End Role="Positions" Type="Self.Positions" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Positions">
+              <PropertyRef Name="ID_Position" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="Position_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staff__Store_ID__5BE2A6F2">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresBoo__Book___6477ECF3">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="StoresBooks" Type="Self.StoresBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="StoresBooks">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresBoo__Store__6383C8BA">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="StoresBooks" Type="Self.StoresBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="StoresBooks">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresSup__Store__5629CD9C">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="StoresSupplier" Type="Self.StoresSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="StoresSupplier">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresSup__Suppl__571DF1D5">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="StoresSupplier" Type="Self.StoresSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="ID_Supplier" />
+            </Principal>
+            <Dependent Role="StoresSupplier">
+              <PropertyRef Name="Supplier_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Book_ID__6754599E">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Status_I__68487DD7">
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Status_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Store_ID__6A30C649">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Supplier__693CA210">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="ID_Supplier" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Supplier_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище BookDBModelContainer">
+          <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Genre" EntityType="Self.Genre" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Positions" EntityType="Self.Positions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Sales" EntityType="Self.Sales" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Statuses" EntityType="Self.Statuses" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Stores" EntityType="Self.Stores" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoresBooks" EntityType="Self.StoresBooks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="StoresSupplier" EntityType="Self.StoresSupplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Supply" EntityType="Self.Supply" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Books__Genre_ID__5FB337D6" Association="Self.FK__Books__Genre_ID__5FB337D6">
+            <End Role="Genre" EntitySet="Genre" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Books__Status_ID__60A75C0F" Association="Self.FK__Books__Status_ID__60A75C0F">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__Book_ID__6E01572D" Association="Self.FK__Sales__Book_ID__6E01572D">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__Store_ID__6D0D32F4" Association="Self.FK__Sales__Store_ID__6D0D32F4">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staff__Position___5AEE82B9" Association="Self.FK__Staff__Position___5AEE82B9">
+            <End Role="Positions" EntitySet="Positions" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staff__Store_ID__5BE2A6F2" Association="Self.FK__Staff__Store_ID__5BE2A6F2">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresBoo__Book___6477ECF3" Association="Self.FK__StoresBoo__Book___6477ECF3">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="StoresBooks" EntitySet="StoresBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresBoo__Store__6383C8BA" Association="Self.FK__StoresBoo__Store__6383C8BA">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="StoresBooks" EntitySet="StoresBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresSup__Store__5629CD9C" Association="Self.FK__StoresSup__Store__5629CD9C">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="StoresSupplier" EntitySet="StoresSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresSup__Suppl__571DF1D5" Association="Self.FK__StoresSup__Suppl__571DF1D5">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="StoresSupplier" EntitySet="StoresSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Book_ID__6754599E" Association="Self.FK__Supply__Book_ID__6754599E">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Status_I__68487DD7" Association="Self.FK__Supply__Status_I__68487DD7">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Store_ID__6A30C649" Association="Self.FK__Supply__Store_ID__6A30C649">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Supplier__693CA210" Association="Self.FK__Supply__Supplier__693CA210">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BookDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="ID_Book" />
+          </Key>
+          <Property Name="ID_Book" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BookTitle" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BookAuthor" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BookISBN" Type="String" MaxLength="17" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="BookPrice" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="Genre_ID" Type="Int32" Nullable="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="BookAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Genre" Relationship="Self.FK__Books__Genre_ID__5FB337D6" FromRole="Books" ToRole="Genre" />
+          <NavigationProperty Name="Statuses" Relationship="Self.FK__Books__Status_ID__60A75C0F" FromRole="Books" ToRole="Statuses" />
+          <NavigationProperty Name="Sales" Relationship="Self.FK__Sales__Book_ID__6E01572D" FromRole="Books" ToRole="Sales" />
+          <NavigationProperty Name="StoresBooks" Relationship="Self.FK__StoresBoo__Book___6477ECF3" FromRole="Books" ToRole="StoresBooks" />
+          <NavigationProperty Name="Supply" Relationship="Self.FK__Supply__Book_ID__6754599E" FromRole="Books" ToRole="Supply" />
+        </EntityType>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="ID_Genre" />
+          </Key>
+          <Property Name="ID_Genre" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GenreName" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__Books__Genre_ID__5FB337D6" FromRole="Genre" ToRole="Books" />
+        </EntityType>
+        <EntityType Name="Positions">
+          <Key>
+            <PropertyRef Name="ID_Position" />
+          </Key>
+          <Property Name="ID_Position" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="PositionName" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Staff" Relationship="Self.FK__Staff__Position___5AEE82B9" FromRole="Positions" ToRole="Staff" />
+        </EntityType>
+        <EntityType Name="Sales">
+          <Key>
+            <PropertyRef Name="ID_Sale" />
+          </Key>
+          <Property Name="ID_Sale" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Store_ID" Type="Int32" Nullable="false" />
+          <Property Name="Book_ID" Type="Int32" Nullable="false" />
+          <Property Name="SaleDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="SaleBookAmount" Type="Int32" Nullable="false" />
+          <Property Name="Revenue" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__Sales__Book_ID__6E01572D" FromRole="Sales" ToRole="Books" />
+          <NavigationProperty Name="Stores" Relationship="Self.FK__Sales__Store_ID__6D0D32F4" FromRole="Sales" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Staff">
+          <Key>
+            <PropertyRef Name="ID_Staff" />
+          </Key>
+          <Property Name="ID_Staff" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StaffSurname" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StaffName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StaffMiddleName" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="StaffContact" Type="String" MaxLength="11" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Position_ID" Type="Int32" Nullable="false" />
+          <Property Name="Store_ID" Type="Int32" />
+          <NavigationProperty Name="Positions" Relationship="Self.FK__Staff__Position___5AEE82B9" FromRole="Staff" ToRole="Positions" />
+          <NavigationProperty Name="Stores" Relationship="Self.FK__Staff__Store_ID__5BE2A6F2" FromRole="Staff" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="Statuses">
+          <Key>
+            <PropertyRef Name="ID_Status" />
+          </Key>
+          <Property Name="ID_Status" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StatusName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__Books__Status_ID__60A75C0F" FromRole="Statuses" ToRole="Books" />
+          <NavigationProperty Name="Supply" Relationship="Self.FK__Supply__Status_I__68487DD7" FromRole="Statuses" ToRole="Supply" />
+        </EntityType>
+        <EntityType Name="Stores">
+          <Key>
+            <PropertyRef Name="ID_Store" />
+          </Key>
+          <Property Name="ID_Store" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="StoreAddress" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="StoreContact" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="Sales" Relationship="Self.FK__Sales__Store_ID__6D0D32F4" FromRole="Stores" ToRole="Sales" />
+          <NavigationProperty Name="Staff" Relationship="Self.FK__Staff__Store_ID__5BE2A6F2" FromRole="Stores" ToRole="Staff" />
+          <NavigationProperty Name="StoresBooks" Relationship="Self.FK__StoresBoo__Store__6383C8BA" FromRole="Stores" ToRole="StoresBooks" />
+          <NavigationProperty Name="StoresSupplier" Relationship="Self.FK__StoresSup__Store__5629CD9C" FromRole="Stores" ToRole="StoresSupplier" />
+          <NavigationProperty Name="Supply" Relationship="Self.FK__Supply__Store_ID__6A30C649" FromRole="Stores" ToRole="Supply" />
+        </EntityType>
+        <EntityType Name="StoresBooks">
+          <Key>
+            <PropertyRef Name="ID_StoreBook" />
+          </Key>
+          <Property Name="ID_StoreBook" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Store_ID" Type="Int32" Nullable="false" />
+          <Property Name="Book_ID" Type="Int32" Nullable="false" />
+          <Property Name="StoreBookAmount" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__StoresBoo__Book___6477ECF3" FromRole="StoresBooks" ToRole="Books" />
+          <NavigationProperty Name="Stores" Relationship="Self.FK__StoresBoo__Store__6383C8BA" FromRole="StoresBooks" ToRole="Stores" />
+        </EntityType>
+        <EntityType Name="StoresSupplier">
+          <Key>
+            <PropertyRef Name="ID_StoresSupplier" />
+          </Key>
+          <Property Name="ID_StoresSupplier" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Store_ID" Type="Int32" Nullable="false" />
+          <Property Name="Supplier_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Stores" Relationship="Self.FK__StoresSup__Store__5629CD9C" FromRole="StoresSupplier" ToRole="Stores" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK__StoresSup__Suppl__571DF1D5" FromRole="StoresSupplier" ToRole="Supplier" />
+        </EntityType>
+        <EntityType Name="Supplier">
+          <Key>
+            <PropertyRef Name="ID_Supplier" />
+          </Key>
+          <Property Name="ID_Supplier" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SupplierName" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
+          <NavigationProperty Name="StoresSupplier" Relationship="Self.FK__StoresSup__Suppl__571DF1D5" FromRole="Supplier" ToRole="StoresSupplier" />
+          <NavigationProperty Name="Supply" Relationship="Self.FK__Supply__Supplier__693CA210" FromRole="Supplier" ToRole="Supply" />
+        </EntityType>
+        <EntityType Name="Supply">
+          <Key>
+            <PropertyRef Name="ID_Supply" />
+          </Key>
+          <Property Name="ID_Supply" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Book_ID" Type="Int32" Nullable="false" />
+          <Property Name="BookAmount" Type="Int32" Nullable="false" />
+          <Property Name="Status_ID" Type="Int32" Nullable="false" />
+          <Property Name="SupplyDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Supplier_ID" Type="Int32" Nullable="false" />
+          <Property Name="Store_ID" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK__Supply__Book_ID__6754599E" FromRole="Supply" ToRole="Books" />
+          <NavigationProperty Name="Statuses" Relationship="Self.FK__Supply__Status_I__68487DD7" FromRole="Supply" ToRole="Statuses" />
+          <NavigationProperty Name="Stores" Relationship="Self.FK__Supply__Store_ID__6A30C649" FromRole="Supply" ToRole="Stores" />
+          <NavigationProperty Name="Supplier" Relationship="Self.FK__Supply__Supplier__693CA210" FromRole="Supply" ToRole="Supplier" />
+        </EntityType>
+        <Association Name="FK__Books__Genre_ID__5FB337D6">
+          <End Role="Genre" Type="Self.Genre" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="ID_Genre" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="Genre_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Books__Status_ID__60A75C0F">
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="Status_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__Book_ID__6E01572D">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresBoo__Book___6477ECF3">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="StoresBooks" Type="Self.StoresBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="StoresBooks">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Book_ID__6754599E">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="ID_Book" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Book_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staff__Position___5AEE82B9">
+          <End Role="Positions" Type="Self.Positions" Multiplicity="1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Positions">
+              <PropertyRef Name="ID_Position" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="Position_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Sales__Store_ID__6D0D32F4">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Sales" Type="Self.Sales" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Sales">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Staff__Store_ID__5BE2A6F2">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="0..1" />
+          <End Role="Staff" Type="Self.Staff" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Staff">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Status_I__68487DD7">
+          <End Role="Statuses" Type="Self.Statuses" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Statuses">
+              <PropertyRef Name="ID_Status" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Status_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresBoo__Store__6383C8BA">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="StoresBooks" Type="Self.StoresBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="StoresBooks">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresSup__Store__5629CD9C">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="StoresSupplier" Type="Self.StoresSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="StoresSupplier">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Store_ID__6A30C649">
+          <End Role="Stores" Type="Self.Stores" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Stores">
+              <PropertyRef Name="ID_Store" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Store_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__StoresSup__Suppl__571DF1D5">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="StoresSupplier" Type="Self.StoresSupplier" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="ID_Supplier" />
+            </Principal>
+            <Dependent Role="StoresSupplier">
+              <PropertyRef Name="Supplier_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Supply__Supplier__693CA210">
+          <End Role="Supplier" Type="Self.Supplier" Multiplicity="1" />
+          <End Role="Supply" Type="Self.Supply" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Supplier">
+              <PropertyRef Name="ID_Supplier" />
+            </Principal>
+            <Dependent Role="Supply">
+              <PropertyRef Name="Supplier_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookDBEntities2" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Books" EntityType="Self.Books" />
+          <EntitySet Name="Genre" EntityType="Self.Genre" />
+          <EntitySet Name="Positions" EntityType="Self.Positions" />
+          <EntitySet Name="Sales" EntityType="Self.Sales" />
+          <EntitySet Name="Staff" EntityType="Self.Staff" />
+          <EntitySet Name="Statuses" EntityType="Self.Statuses" />
+          <EntitySet Name="Stores" EntityType="Self.Stores" />
+          <EntitySet Name="StoresBooks" EntityType="Self.StoresBooks" />
+          <EntitySet Name="StoresSupplier" EntityType="Self.StoresSupplier" />
+          <EntitySet Name="Supplier" EntityType="Self.Supplier" />
+          <EntitySet Name="Supply" EntityType="Self.Supply" />
+          <AssociationSet Name="FK__Books__Genre_ID__5FB337D6" Association="Self.FK__Books__Genre_ID__5FB337D6">
+            <End Role="Genre" EntitySet="Genre" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Books__Status_ID__60A75C0F" Association="Self.FK__Books__Status_ID__60A75C0F">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__Book_ID__6E01572D" Association="Self.FK__Sales__Book_ID__6E01572D">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresBoo__Book___6477ECF3" Association="Self.FK__StoresBoo__Book___6477ECF3">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="StoresBooks" EntitySet="StoresBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Book_ID__6754599E" Association="Self.FK__Supply__Book_ID__6754599E">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staff__Position___5AEE82B9" Association="Self.FK__Staff__Position___5AEE82B9">
+            <End Role="Positions" EntitySet="Positions" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Sales__Store_ID__6D0D32F4" Association="Self.FK__Sales__Store_ID__6D0D32F4">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Sales" EntitySet="Sales" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Staff__Store_ID__5BE2A6F2" Association="Self.FK__Staff__Store_ID__5BE2A6F2">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Staff" EntitySet="Staff" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Status_I__68487DD7" Association="Self.FK__Supply__Status_I__68487DD7">
+            <End Role="Statuses" EntitySet="Statuses" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresBoo__Store__6383C8BA" Association="Self.FK__StoresBoo__Store__6383C8BA">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="StoresBooks" EntitySet="StoresBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresSup__Store__5629CD9C" Association="Self.FK__StoresSup__Store__5629CD9C">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="StoresSupplier" EntitySet="StoresSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Store_ID__6A30C649" Association="Self.FK__Supply__Store_ID__6A30C649">
+            <End Role="Stores" EntitySet="Stores" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+          <AssociationSet Name="FK__StoresSup__Suppl__571DF1D5" Association="Self.FK__StoresSup__Suppl__571DF1D5">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="StoresSupplier" EntitySet="StoresSupplier" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Supply__Supplier__693CA210" Association="Self.FK__Supply__Supplier__693CA210">
+            <End Role="Supplier" EntitySet="Supplier" />
+            <End Role="Supply" EntitySet="Supply" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище BookDBModelContainer" CdmEntityContainer="BookDBEntities2">
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="BookDBModel.Books">
+              <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="ID_Book" ColumnName="ID_Book" />
+                <ScalarProperty Name="BookTitle" ColumnName="BookTitle" />
+                <ScalarProperty Name="BookAuthor" ColumnName="BookAuthor" />
+                <ScalarProperty Name="BookISBN" ColumnName="BookISBN" />
+                <ScalarProperty Name="BookPrice" ColumnName="BookPrice" />
+                <ScalarProperty Name="Genre_ID" ColumnName="Genre_ID" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="BookAmount" ColumnName="BookAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Genre">
+            <EntityTypeMapping TypeName="BookDBModel.Genre">
+              <MappingFragment StoreEntitySet="Genre">
+                <ScalarProperty Name="ID_Genre" ColumnName="ID_Genre" />
+                <ScalarProperty Name="GenreName" ColumnName="GenreName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Positions">
+            <EntityTypeMapping TypeName="BookDBModel.Positions">
+              <MappingFragment StoreEntitySet="Positions">
+                <ScalarProperty Name="ID_Position" ColumnName="ID_Position" />
+                <ScalarProperty Name="PositionName" ColumnName="PositionName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Sales">
+            <EntityTypeMapping TypeName="BookDBModel.Sales">
+              <MappingFragment StoreEntitySet="Sales">
+                <ScalarProperty Name="ID_Sale" ColumnName="ID_Sale" />
+                <ScalarProperty Name="Store_ID" ColumnName="Store_ID" />
+                <ScalarProperty Name="Book_ID" ColumnName="Book_ID" />
+                <ScalarProperty Name="SaleDate" ColumnName="SaleDate" />
+                <ScalarProperty Name="SaleBookAmount" ColumnName="SaleBookAmount" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Staff">
+            <EntityTypeMapping TypeName="BookDBModel.Staff">
+              <MappingFragment StoreEntitySet="Staff">
+                <ScalarProperty Name="ID_Staff" ColumnName="ID_Staff" />
+                <ScalarProperty Name="StaffSurname" ColumnName="StaffSurname" />
+                <ScalarProperty Name="StaffName" ColumnName="StaffName" />
+                <ScalarProperty Name="StaffMiddleName" ColumnName="StaffMiddleName" />
+                <ScalarProperty Name="StaffContact" ColumnName="StaffContact" />
+                <ScalarProperty Name="Position_ID" ColumnName="Position_ID" />
+                <ScalarProperty Name="Store_ID" ColumnName="Store_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Statuses">
+            <EntityTypeMapping TypeName="BookDBModel.Statuses">
+              <MappingFragment StoreEntitySet="Statuses">
+                <ScalarProperty Name="ID_Status" ColumnName="ID_Status" />
+                <ScalarProperty Name="StatusName" ColumnName="StatusName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Stores">
+            <EntityTypeMapping TypeName="BookDBModel.Stores">
+              <MappingFragment StoreEntitySet="Stores">
+                <ScalarProperty Name="ID_Store" ColumnName="ID_Store" />
+                <ScalarProperty Name="StoreAddress" ColumnName="StoreAddress" />
+                <ScalarProperty Name="StoreContact" ColumnName="StoreContact" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoresBooks">
+            <EntityTypeMapping TypeName="BookDBModel.StoresBooks">
+              <MappingFragment StoreEntitySet="StoresBooks">
+                <ScalarProperty Name="ID_StoreBook" ColumnName="ID_StoreBook" />
+                <ScalarProperty Name="Store_ID" ColumnName="Store_ID" />
+                <ScalarProperty Name="Book_ID" ColumnName="Book_ID" />
+                <ScalarProperty Name="StoreBookAmount" ColumnName="StoreBookAmount" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="StoresSupplier">
+            <EntityTypeMapping TypeName="BookDBModel.StoresSupplier">
+              <MappingFragment StoreEntitySet="StoresSupplier">
+                <ScalarProperty Name="ID_StoresSupplier" ColumnName="ID_StoresSupplier" />
+                <ScalarProperty Name="Store_ID" ColumnName="Store_ID" />
+                <ScalarProperty Name="Supplier_ID" ColumnName="Supplier_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Supplier">
+            <EntityTypeMapping TypeName="BookDBModel.Supplier">
+              <MappingFragment StoreEntitySet="Supplier">
+                <ScalarProperty Name="ID_Supplier" ColumnName="ID_Supplier" />
+                <ScalarProperty Name="SupplierName" ColumnName="SupplierName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Supply">
+            <EntityTypeMapping TypeName="BookDBModel.Supply">
+              <MappingFragment StoreEntitySet="Supply">
+                <ScalarProperty Name="ID_Supply" ColumnName="ID_Supply" />
+                <ScalarProperty Name="Book_ID" ColumnName="Book_ID" />
+                <ScalarProperty Name="BookAmount" ColumnName="BookAmount" />
+                <ScalarProperty Name="Status_ID" ColumnName="Status_ID" />
+                <ScalarProperty Name="SupplyDate" ColumnName="SupplyDate" />
+                <ScalarProperty Name="Supplier_ID" ColumnName="Supplier_ID" />
+                <ScalarProperty Name="Store_ID" ColumnName="Store_ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

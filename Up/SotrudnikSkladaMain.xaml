@@ -1,0 +1,53 @@
+﻿<Window x:Class="Up.SotrudnikSkladaMain"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Up"
+        mc:Ignorable="d"
+        Title="Сотрудник склада: главная" Height="900" Width="1600" Icon="boook.png"
+        WindowStartupLocation="CenterScreen"
+        Background="#1D3557">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24px"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30px" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+
+        <DataGrid x:Name="BooksDgr" IsReadOnly="True"  Background="#305486" Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="2"  FontFamily="Arial Black" FontSize="16" Margin="10">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+
+
+        <Button x:Name="PostavkaButton" BorderThickness="0" Content="СОЗДАТЬ ПОСТАВКУ" 
+                Background="#A8DADC" Foreground="#1D3557" FontSize="18" 
+                Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center" 
+                Width="250" Height="60" Margin="10" Click="PostavkaButton_Click" FontFamily="Arial Black" />
+
+        <Button x:Name="AddBookButton" BorderThickness="0" Content="ДОБАВИТЬ КНИГУ" 
+                Background="#A8DADC" Foreground="#1D3557" FontSize="18" 
+                Grid.Row="2" Grid.Column="3" HorizontalAlignment="Center" 
+                Width="250" Height="60" Margin="10" Click="AddBookButton_Click" FontFamily="Arial Black" />
+
+        <Button x:Name="LeaveButton" BorderThickness="0" Content="ВЫХОД ИЗ АККАУНТА" 
+                Background="#A8DADC" Foreground="#1D3557" FontSize="18" 
+                Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" 
+                Width="280" Height="60" Margin="10" Click="LeaveButton_Click" FontFamily="Arial Black" />
+    </Grid>
+</Window>

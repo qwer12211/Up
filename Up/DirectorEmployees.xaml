@@ -1,0 +1,73 @@
+﻿<Window x:Class="Up.DirectorEmployees"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Up"
+        mc:Ignorable="d"
+        Title="Директор: сотрудники" Height="800" Width="1500" Icon="boook.png"
+        WindowStartupLocation="CenterScreen"
+        Background="#1D3557">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24px"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25px" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="150px" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="25px" />
+
+        </Grid.ColumnDefinitions>
+        <DataGrid x:Name="StafDgr" FontFamily="Arial Black" IsReadOnly="True" AutoGenerateColumns="False" Background="#305486" Grid.Row="1" Grid.RowSpan="4" Grid.Column="1" Grid.ColumnSpan="3" Margin="0,0,0,107" SelectionChanged="BooksDgr_SelectionChanged">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding StaffSurname}" Header="ФАМИЛИЯ"/>
+                <DataGridTextColumn Binding="{Binding StaffName}" Header="ИМЯ"/>
+                <DataGridTextColumn Binding="{Binding StaffMiddleName}" Header="ОТЧЕСТВО"/>
+                <DataGridTextColumn Binding="{Binding Positions.PositionName}" Header="ДОЛЖНОСТЬ"/>
+                <DataGridTextColumn Binding="{Binding StaffContact}" Header="НОМЕР ТЕЛЕФОНА"/>
+                <DataGridTextColumn Binding="{Binding Stores.StoreAddress}" Header="МАГАЗИН"/>
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <TextBox x:Name="NameBookTextBox" FontFamily="Arial Black" Margin="0,0,0,70" Grid.Row="1" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" Foreground="White" materialDesign:HintAssist.Hint="ФАМИЛИЯ"/>
+        <TextBox x:Name="SurnametBox" FontFamily="Arial Black" Margin="0,70,0,0" Grid.Row="1" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" BorderBrush="Transparent" Foreground="White" materialDesign:HintAssist.Hint="ИМЯ"/>
+
+        <TextBox x:Name="MidleTextBox" FontFamily="Arial Black" Margin="0,0,0,70" Grid.Row="2" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" Foreground="White" materialDesign:HintAssist.Hint="ОТЧЕСТВО"/>
+        <ComboBox x:Name="StafComboBox" FontFamily="Arial Black" Margin="0,70,0,0" Grid.Row="2" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" Foreground="White" materialDesign:HintAssist.Hint="ДОЛЖНОСТЬ">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="#000000" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <TextBox x:Name="PhoneTextBox" FontFamily="Arial Black" Margin="0,0,0,70" Grid.Row="3" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" BorderBrush="Transparent" Foreground="White" materialDesign:HintAssist.Hint="ТЕЛЕФОН"/>
+        <ComboBox x:Name="ShopComboBox" FontFamily="Arial Black" Margin="0,70,0,0" Grid.Row="3" Grid.Column="5" Background="#305486" FontSize="18" Width="250" Height="40" Foreground="White" materialDesign:HintAssist.Hint="МАГАЗИН">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="#000000" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <Button x:Name="LeaveButton" FontFamily="Arial Black" BorderThickness="0" Content="ВЫХОД" Background="#A8DADC" Margin="5" FontSize="18" Foreground="#1D3557" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="50" Click="LeaveButton_Click" />
+        <Button x:Name="AddButton" FontFamily="Arial Black" BorderThickness="0" Content="ДОБАВИТЬ" Background="#A8DADC" Margin="5" FontSize="18" Foreground="#1D3557" Grid.Row="5" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="50" Click="AddButton_Click" />
+        <Button x:Name="DelButton" FontFamily="Arial Black" BorderThickness="0" Content="УДАЛИТЬ" Background="#A8DADC" Margin="5" FontSize="18" Foreground="#1D3557" Grid.Row="5" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="50" Click="DelButton_Click" />
+        <Button x:Name="ChangeButton" FontFamily="Arial Black" BorderThickness="0" Content="ИЗМЕНИТЬ" Background="#A8DADC" Margin="5" FontSize="18" Foreground="#1D3557" Grid.Row="5" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Center" Width="200" Height="50" Click="ChangeButton_Click" />
+    </Grid>
+</Window>

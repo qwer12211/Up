@@ -1,0 +1,43 @@
+﻿<Window x:Class="Up.DirectorMainRevenue"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Up"
+        mc:Ignorable="d"
+        Title="Директор: выручка" Height="800" Width="1500" Icon="boook.png"
+        WindowStartupLocation="CenterScreen"
+        Background="#1D3557">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24px"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="*"/>
+
+            <RowDefinition Height="*"/>
+
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25px" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="BooksDgr" IsReadOnly="True" Grid.Row="1"  Background="#305486" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="2" FontFamily="Arial Black">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Style>
+            </DataGrid.Resources>
+        </DataGrid>
+
+        <Button x:Name="LeaveButton" BorderThickness="0" Content="ВЫХОД" Background="#A8DADC" Foreground="#1D3557" FontSize="15" FontFamily="Arial Black" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" Width="173" Height="48" Click="LeaveButton_Click" />
+    </Grid>
+</Window>

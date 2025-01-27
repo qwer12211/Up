@@ -1,0 +1,71 @@
+﻿<Window x:Class="Up.SotrudnikMagazinaSales"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:local="clr-namespace:Up"
+        mc:Ignorable="d"
+        Title="Сотрудник магазина: продажи" Height="800" Width="1500" Icon="boook.png"
+        WindowStartupLocation="CenterScreen"
+        Background="#1D3557">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="24px"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="25px" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <DataGrid x:Name="BooksDgr" AutoGenerateColumns="False"    Background="#305486" IsReadOnly="True" Grid.Row="1" Grid.RowSpan="3" Grid.Column="1" Grid.ColumnSpan="2" SelectionChanged="BooksDgr_SelectionChanged" FontFamily="Arial Black">
+            <DataGrid.Resources>
+                <Style TargetType="DataGridCell">
+                    <Setter Property="Foreground" Value="#FFFFFF"/>
+                </Style>
+            </DataGrid.Resources>
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Название книги" Binding="{Binding BookTitle}" />
+                <DataGridTextColumn Header="Автор" Binding="{Binding BookAuthor}" />
+                <DataGridTextColumn Header="Количество проданных книг" Binding="{Binding SaleBookAmount}" />
+                <DataGridTextColumn Header="Статус" Binding="{Binding StatusName}" />
+                <DataGridTextColumn Header="Дата поставки" Binding="{Binding SupplyDate, StringFormat=\{0:dd.MM.yyyy\}}" />
+                <DataGridTextColumn Header="Поставщик" Binding="{Binding SupplierName}" />
+                <DataGridTextColumn Header="Адрес магазина" Binding="{Binding StoreAddress}" />
+            </DataGrid.Columns>
+        </DataGrid>
+
+        <ComboBox x:Name="NameBookComboBox" materialDesign:HintAssist.Hint="КНИГА" Margin="0,0,0,50" Grid.Row="1" Grid.Column="3" Background="#305486" Foreground="#FFFFFF" FontSize="18" Width="300" Height="50" SelectionChanged="NameBookComboBox_SelectionChanged" FontFamily="Arial Black">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="#000000" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <DatePicker x:Name="DatePicker" materialDesign:HintAssist.Hint="ДАТА" Margin="0,50,0,0" Grid.Row="1" Grid.Column="3" Background="#305486" Foreground="Black" FontSize="18" Width="300" Height="50" SelectedDateFormat="Short" FontFamily="Arial Black" />
+
+        <ComboBox x:Name="ShopComboBox" materialDesign:HintAssist.Hint="МАГАЗИН" Margin="0,0,0,50" Grid.Row="2" Grid.Column="3" Background="#305486" Foreground="#FFFFFF" FontSize="18" Width="300" Height="50" SelectionChanged="ShopComboBox_SelectionChanged" FontFamily="Arial Black">
+            <ComboBox.ItemContainerStyle>
+                <Style TargetType="ComboBoxItem">
+                    <Setter Property="Foreground" Value="#000000" />
+                </Style>
+            </ComboBox.ItemContainerStyle>
+        </ComboBox>
+
+        <TextBox x:Name="QuantityTextBox" Margin="0,50,0,0" Grid.Row="2" Grid.Column="5" Background="#305486" Foreground="#FFFFFF" FontSize="18" Width="300" Height="50" materialDesign:HintAssist.Foreground="#FFFFFF" materialDesign:HintAssist.Hint="КОЛ-ВО КНИГ" FontFamily="Arial Black" />
+
+        <TextBox x:Name="revenueTextBox" Margin="0,0,0,50" Grid.Row="3" Grid.Column="5" Background="#305486" Foreground="#FFFFFF" FontSize="18" Width="300" Height="50" materialDesign:HintAssist.Foreground="#FFFFFF" materialDesign:HintAssist.Hint="ВЫРУЧКА" FontFamily="Arial Black" />
+
+        <Button x:Name="LeaveButton" BorderThickness="0" Content="ВЫХОД" Background="#A8DADC" Foreground="#1D3557" FontSize="18" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" Width="200" Height="50" Click="LeaveButton_Click" FontFamily="Arial Black" />
+
+        <Button x:Name="CreateButton" BorderThickness="0" Content="СОЗДАТЬ" Foreground="#1D3557" Margin="0,50,0,0" Background="#A8DADC" FontSize="18" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" Width="250" Height="50" Click="CreateButton_Click" FontFamily="Arial Black" />
+    </Grid>
+</Window>
