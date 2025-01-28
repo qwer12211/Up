@@ -1,22 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
 
 namespace Up
 {
     public partial class SotrudnikSkladaBooks : Window
     {
         private BookDBEntities2 context = new BookDBEntities2();
+
         public SotrudnikSkladaBooks()
         {
             InitializeComponent();
@@ -54,15 +47,13 @@ namespace Up
                     return;
                 }
 
-
                 string isbnPattern = @"^(97(8|9))?\d{1,5}(-\d{1,7}){1,3}-\d{1,7}-\d{1,7}-\d{1}$";
                 string isbn = ISBNTextBox.Text.Trim();
-                if (!System.Text.RegularExpressions.Regex.IsMatch(isbn, isbnPattern))
+                if (!Regex.IsMatch(isbn, isbnPattern))
                 {
                     MessageBox.Show("Неверный формат ISBN.");
                     return;
                 }
-
 
                 var existingBook = context.Books.FirstOrDefault(b => b.BookISBN == isbn);
                 if (existingBook != null)
@@ -71,7 +62,6 @@ namespace Up
                     return;
                 }
 
-  
                 decimal price;
                 int amount;
                 if (!decimal.TryParse(PriceTextBox.Text, out price) || price <= 0)
@@ -87,8 +77,8 @@ namespace Up
                 }
 
                 string bookTitle = NameBookTextBox.Text.Trim();
-                var existinBook = context.Books.FirstOrDefault(b => b.BookTitle.ToLower() == bookTitle.ToLower());
-                if (existinBook != null)
+                var existingTitleBook = context.Books.FirstOrDefault(b => b.BookTitle.ToLower() == bookTitle.ToLower());
+                if (existingTitleBook != null)
                 {
                     MessageBox.Show("Книга с таким названием уже существует.");
                     return;
@@ -108,7 +98,13 @@ namespace Up
                 context.Books.Add(newBook);
                 context.SaveChanges();
 
-     
+                var bookToUpdate = context.Books.FirstOrDefault(b => b.BookISBN == isbn);
+                if (bookToUpdate != null)
+                {
+                    bookToUpdate.BookAmount += amount; 
+                    context.SaveChanges();
+                }
+
                 BooksDgr.ItemsSource = context.Books.ToList();
 
                 NameBookTextBox.Clear();
@@ -126,7 +122,6 @@ namespace Up
                 MessageBox.Show($"Произошла ошибка при добавлении книги: {ex.Message}");
             }
         }
-
 
         private void ChangeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -151,7 +146,6 @@ namespace Up
                     string newTitle = NameBookTextBox.Text.Trim();
                     string newISBN = ISBNTextBox.Text.Trim();
 
-           
                     var duplicateTitleBook = context.Books
                         .FirstOrDefault(b => b.BookTitle.ToLower() == newTitle.ToLower() && b.ID_Book != selectedBook.ID_Book);
                     if (duplicateTitleBook != null)
@@ -191,6 +185,15 @@ namespace Up
                     selectedBook.BookAmount = amount;
 
                     context.SaveChanges();
+
+      
+                    var bookToUpdate = context.Books.FirstOrDefault(b => b.BookISBN == newISBN);
+                    if (bookToUpdate != null)
+                    {
+                        bookToUpdate.BookAmount += amount; 
+                        context.SaveChanges();
+                    }
+
                     BooksDgr.ItemsSource = context.Books.ToList();
 
                     NameBookTextBox.Clear();
@@ -213,7 +216,6 @@ namespace Up
                 MessageBox.Show($"Произошла ошибка при изменении книги: {ex.Message}");
             }
         }
-
 
         private void DelButton_Click(object sender, RoutedEventArgs e)
         {
@@ -264,7 +266,6 @@ namespace Up
             }
         }
 
-
         private void PriceTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
@@ -273,8 +274,6 @@ namespace Up
         private void ISBNTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
 
-           
         }
-
     }
 }

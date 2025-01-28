@@ -58,23 +58,20 @@ namespace Up
         {
             if (StafDgr.SelectedItem != null)
             {
-                // Валидация полей
                 if (string.IsNullOrEmpty(SurnametBox.Text) ||
                     string.IsNullOrEmpty(NameBookTextBox.Text) ||
-                    string.IsNullOrEmpty(MidleTextBox.Text) ||
                     string.IsNullOrEmpty(PhoneTextBox.Text) ||
                     StafComboBox.SelectedItem == null ||
                     ShopComboBox.SelectedItem == null)
                 {
-                    MessageBox.Show("Пожалуйста, заполните все поля.");
+                    MessageBox.Show("Пожалуйста, заполните все обязательные поля.");
                     return;
                 }
 
                 if (System.Text.RegularExpressions.Regex.IsMatch(SurnametBox.Text, @"\d") ||
-                    System.Text.RegularExpressions.Regex.IsMatch(NameBookTextBox.Text, @"\d") ||
-                    System.Text.RegularExpressions.Regex.IsMatch(MidleTextBox.Text, @"\d"))
+                    System.Text.RegularExpressions.Regex.IsMatch(NameBookTextBox.Text, @"\d"))
                 {
-                    MessageBox.Show("Имя, фамилия и отчество не могут содержать цифры.");
+                    MessageBox.Show("Имя и фамилия не могут содержать цифры.");
                     return;
                 }
 
@@ -106,7 +103,7 @@ namespace Up
 
                 selectedRow.StaffSurname = SurnametBox.Text;
                 selectedRow.StaffName = NameBookTextBox.Text;
-                selectedRow.StaffMiddleName = MidleTextBox.Text;
+                selectedRow.StaffMiddleName = string.IsNullOrWhiteSpace(MidleTextBox.Text) ? null : MidleTextBox.Text;  
                 selectedRow.StaffContact = PhoneTextBox.Text;
 
                 if (StafComboBox.SelectedItem != null)
@@ -171,28 +168,43 @@ namespace Up
             }
         }
 
+        private void StafComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (StafComboBox.SelectedItem != null)
+            {
+                var selectedPosition = (Positions)StafComboBox.SelectedItem;
+
+
+                if (selectedPosition.PositionName == "Склад" || selectedPosition.PositionName == "Директор")
+                {
+
+                    ShopComboBox.Visibility = Visibility.Collapsed;
+                }
+                else
+                {
+
+                    ShopComboBox.Visibility = Visibility.Visible;
+                }
+            }
+        }
         private void AddButton_Click(object sender, RoutedEventArgs e)
         {
-
             if (string.IsNullOrEmpty(SurnametBox.Text) ||
                 string.IsNullOrEmpty(NameBookTextBox.Text) ||
-                string.IsNullOrEmpty(MidleTextBox.Text) ||
                 string.IsNullOrEmpty(PhoneTextBox.Text) ||
                 StafComboBox.SelectedItem == null ||
                 ShopComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Пожалуйста, заполните все поля.");
+                MessageBox.Show("Пожалуйста, заполните все обязательные поля.");
                 return;
             }
 
             if (System.Text.RegularExpressions.Regex.IsMatch(SurnametBox.Text, @"\d") ||
-                System.Text.RegularExpressions.Regex.IsMatch(NameBookTextBox.Text, @"\d") ||
-                System.Text.RegularExpressions.Regex.IsMatch(MidleTextBox.Text, @"\d"))
+                System.Text.RegularExpressions.Regex.IsMatch(NameBookTextBox.Text, @"\d"))
             {
-                MessageBox.Show("Имя, фамилия и отчество не могут содержать цифры.");
+                MessageBox.Show("Имя и фамилия не могут содержать цифры.");
                 return;
             }
-
 
             if (!System.Text.RegularExpressions.Regex.IsMatch(PhoneTextBox.Text, @"^\d+$"))
             {
@@ -208,7 +220,7 @@ namespace Up
 
             if (PhoneTextBox.Text.Length > 11)
             {
-                MessageBox.Show("Номер телефона должен содержать минимум 11 цифр.");
+                MessageBox.Show("Номер телефона должен содержать максимум 11 цифр.");
                 return;
             }
 
@@ -218,12 +230,11 @@ namespace Up
                 return;
             }
 
-
             var newStaff = new Staff
             {
                 StaffSurname = SurnametBox.Text,
                 StaffName = NameBookTextBox.Text,
-                StaffMiddleName = MidleTextBox.Text,
+                StaffMiddleName = string.IsNullOrWhiteSpace(MidleTextBox.Text) ? null : MidleTextBox.Text,  
                 StaffContact = PhoneTextBox.Text,
                 Position_ID = ((Positions)StafComboBox.SelectedItem).ID_Position,
                 Store_ID = ((Stores)ShopComboBox.SelectedItem).ID_Store

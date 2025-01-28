@@ -18,47 +18,37 @@ using PdfSharp.Pdf;
 using PdfSharp.Drawing;
 using Path = System.IO.Path;
 
-
 namespace Up
 {
-    /// <summary>
-    /// Логика взаимодействия для DirectorMain.xaml
-    /// </summary>
     public partial class DirectorMain : Window
     {
         private BookDBEntities2 context = new BookDBEntities2();
+
         public DirectorMain()
         {
             InitializeComponent();
             MinHeight = 800;
             MinWidth = 1500;
-
         }
 
         private void LeaveButton_Click(object sender, RoutedEventArgs e)
         {
             MainWindow mainWindow = new MainWindow();
-
             mainWindow.Show();
-
             this.Close();
         }
 
         private void employeesButton_Click(object sender, RoutedEventArgs e)
         {
             DirectorEmployees mainWindow = new DirectorEmployees();
-
             mainWindow.Show();
-
             this.Close();
         }
 
         private void RevenueButton_Click(object sender, RoutedEventArgs e)
         {
             DirectorMainRevenue mainWindow = new DirectorMainRevenue();
-
             mainWindow.Show();
-
             this.Close();
         }
 
@@ -87,6 +77,40 @@ namespace Up
             }
         }
 
+        private static string GenerateUniqueNamePdf(string pdfFilePath)
+        {
+            try
+            {
+        
+                string directory = Path.GetDirectoryName(pdfFilePath);
+                string reportNumberFilePath = Path.Combine(directory, "lastReportNumber.txt");
+
+                int reportNumber = 1; 
+
+                if (File.Exists(reportNumberFilePath))
+                {
+                    string lastReportNumber = File.ReadAllText(reportNumberFilePath);
+                    if (int.TryParse(lastReportNumber, out int lastNumber))
+                    {
+                        reportNumber = lastNumber + 1; 
+                    }
+                }
+
+                string fileName = $"Отчёт{reportNumber}.pdf";
+                string filePath = Path.Combine(directory, fileName);
+
+
+                File.WriteAllText(reportNumberFilePath, reportNumber.ToString());
+
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании уникального имени файла: {ex.Message}");
+                return null;
+            }
+        }
+
 
         private void ReportButton_Click(object sender, RoutedEventArgs e)
         {
@@ -111,7 +135,12 @@ namespace Up
                     string fileName = $"Отчёт{reportNumber}.pdf";
                     string filePath = Path.Combine(folderPath, fileName);
 
-                   
+         
+                    filePath = GenerateUniqueNamePdf(filePath); 
+                    if (filePath == null)
+                    {
+                        return; 
+                    }
 
                     PdfSharp.Pdf.PdfDocument document = new PdfSharp.Pdf.PdfDocument();
                     PdfPage page = document.AddPage();
@@ -131,8 +160,6 @@ namespace Up
 
                         DateTime startDate = StartDatePicker.SelectedDate.Value;
                         DateTime endDate = EndDatePicker.SelectedDate.Value;
-
-
                         MessageBox.Show($"StartDate: {startDate.ToShortDateString()} - EndDate: {endDate.ToShortDateString()}");
 
                         gfx.DrawString($"Отчет по самым продаваемым книгам за период с {startDate.ToShortDateString()} по {endDate.ToShortDateString()}.", font, XBrushes.Black, new XPoint(100, 120));
@@ -148,7 +175,7 @@ namespace Up
                                                    Title = bookGroup.Key.BookTitle,
                                                    Author = bookGroup.Key.BookAuthor,
                                                    SalesAmount = bookGroup.Sum(s => s.SaleBookAmount)
-                                               }).ToList(); // Убираем Take(5)
+                                               }).ToList();
 
                         foreach (var book in topSellingBooks)
                         {
@@ -178,8 +205,6 @@ namespace Up
                         gfx.DrawString("Остатки книг на складе и в магазинах", font, XBrushes.Black, new XPoint(100, 120));
 
                         int yPosition = 160;
-
-      
                         var stockLevels = (from store in context.Stores
                                            join storeBook in context.StoresBooks on store.ID_Store equals storeBook.Store_ID
                                            join book in context.Books on storeBook.Book_ID equals book.ID_Book
@@ -189,7 +214,7 @@ namespace Up
                                                BookTitle = book.BookTitle,
                                                BookAuthor = book.BookAuthor,
                                                StoreBookAmount = storeBook.StoreBookAmount,
-                                               BookAmount = book.BookAmount 
+                                               BookAmount = book.BookAmount
                                            }).ToList();
 
                         var groupedStockLevels = stockLevels
@@ -200,37 +225,32 @@ namespace Up
                                                      g.Key.BookTitle,
                                                      g.Key.BookAuthor,
                                                      TotalStoreStockAmount = g.Sum(s => s.StoreBookAmount),
-                                                     TotalWarehouseStockAmount = g.Max(s => s.BookAmount) 
+                                                     TotalWarehouseStockAmount = g.Max(s => s.BookAmount)
                                                  }).ToList();
 
-                  
                         gfx.DrawString("Остатки книг в магазинах:", new XFont("Times New Roman", 12), XBrushes.Black, new XPoint(100, yPosition));
                         yPosition += 20;
 
                         foreach (var stock in groupedStockLevels)
                         {
                             gfx.DrawString($"{stock.StoreName} – «{stock.BookTitle}» ({stock.BookAuthor})", font, XBrushes.Black, new XPoint(100, yPosition));
-                            yPosition += 20; 
+                            yPosition += 20;
                             gfx.DrawString($"Остаток в магазине: {stock.TotalStoreStockAmount} книг", font, XBrushes.Black, new XPoint(100, yPosition));
                             yPosition += 20;
                         }
 
-        
                         yPosition += 20;
-
                         gfx.DrawString("Остатки книг на складе:", new XFont("Times New Roman", 12), XBrushes.Black, new XPoint(100, yPosition));
                         yPosition += 20;
 
                         foreach (var stock in groupedStockLevels)
                         {
                             gfx.DrawString($"{stock.BookTitle} ({stock.BookAuthor})", font, XBrushes.Black, new XPoint(100, yPosition));
-                            yPosition += 20; 
+                            yPosition += 20;
                             gfx.DrawString($"Остаток на складе: {stock.TotalWarehouseStockAmount} книг", font, XBrushes.Black, new XPoint(100, yPosition));
                             yPosition += 20;
                         }
                     }
-
-
 
                     document.Save(filePath);
                     MessageBox.Show($"Отчёт успешно сохранён в папку: {folderName}\nФайл: {Path.GetFileName(filePath)}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
@@ -241,9 +261,5 @@ namespace Up
                 MessageBox.Show($"Ошибка при создании отчёта: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
     }
-
 }
-

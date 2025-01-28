@@ -8,7 +8,6 @@ namespace Up
     public partial class SotrudnikMagazinaSales : Window
     {
         private BookDBEntities2 context = new BookDBEntities2();
-        private int currentEmployeeId = 2;
 
         private void LeaveButton_Click(object sender, RoutedEventArgs e)
         {
@@ -19,76 +18,51 @@ namespace Up
 
         public SotrudnikMagazinaSales()
         {
-            {
-                InitializeComponent();
-                MinHeight = 800;
-                MinWidth = 1500;
+            InitializeComponent();
+            MinHeight = 800;
+            MinWidth = 1500;
 
-               
-                var currentStoreId = GetCurrentStoreId(currentEmployeeId);  
+            // Получаем данные о продажах без использования currentEmployeeId
+            var salesData = from sale in context.Sales
+                            join book in context.Books on sale.Book_ID equals book.ID_Book
+                            join status in context.Statuses on book.Status_ID equals status.ID_Status
+                            join supply in context.Supply on book.ID_Book equals supply.Book_ID
+                            join supplier in context.Supplier on supply.Supplier_ID equals supplier.ID_Supplier
+                            join store in context.Stores on sale.Store_ID equals store.ID_Store
+                            select new SalesData
+                            {
+                                BookTitle = book.BookTitle,
+                                BookAuthor = book.BookAuthor,
+                                SaleBookAmount = sale.SaleBookAmount,
+                                StatusName = status.StatusName,
+                                SupplyDate = supply.SupplyDate,
+                                SupplierName = supplier.SupplierName,
+                                StoreAddress = store.StoreAddress
+                            };
 
-                var salesData = from sale in context.Sales
-                                join book in context.Books on sale.Book_ID equals book.ID_Book
-                                join status in context.Statuses on book.Status_ID equals status.ID_Status
-                                join supply in context.Supply on book.ID_Book equals supply.Book_ID
-                                join supplier in context.Supplier on supply.Supplier_ID equals supplier.ID_Supplier
-                                join store in context.Stores on sale.Store_ID equals store.ID_Store
-                                where store.ID_Store == currentStoreId  
-                                select new SalesData
-                                {
-                                    BookTitle = book.BookTitle,
-                                    BookAuthor = book.BookAuthor,
-                                    SaleBookAmount = sale.SaleBookAmount,
-                                    StatusName = status.StatusName,
-                                    SupplyDate = supply.SupplyDate,
-                                    SupplierName = supplier.SupplierName,
-                                    StoreAddress = store.StoreAddress
-                                };
-
-                BooksDgr.ItemsSource = salesData.ToList();
-                NameBookComboBox.ItemsSource = context.Books.ToList();
-                NameBookComboBox.DisplayMemberPath = "BookTitle";
-                ShopComboBox.ItemsSource = context.Stores.ToList();
-                ShopComboBox.DisplayMemberPath = "StoreAddress";
-            }
+            BooksDgr.ItemsSource = salesData.ToList();
+            NameBookComboBox.ItemsSource = context.Books.ToList();
+            NameBookComboBox.DisplayMemberPath = "BookTitle";
+            ShopComboBox.ItemsSource = context.Stores.ToList();
+            ShopComboBox.DisplayMemberPath = "StoreAddress";
         }
-
-        private int GetCurrentStoreId(int currentEmployeeId)
-        {
-            var currentEmployee = context.Staff.FirstOrDefault(emp => emp.ID_Staff == currentEmployeeId);
-
-            if (currentEmployee != null && currentEmployee.Store_ID.HasValue)
-            {
-                return currentEmployee.Store_ID.Value; 
-            }
-
-            return -1; 
-        }
-
-
-
-
 
         private void BooksDgr_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
             if (BooksDgr.SelectedItem != null)
             {
                 var selectedRow = BooksDgr.SelectedItem as SalesData;
 
-               
                 if (selectedRow != null)
                 {
-
                     var selectedBook = (Books)NameBookComboBox.SelectedItem;
                     if (selectedBook != null)
                     {
-                        UpdateRevenue(selectedBook); 
+                        UpdateRevenue(selectedBook);
                     }
                 }
             }
         }
-
 
         private void QuantityTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -188,7 +162,6 @@ namespace Up
 
                 BooksDgr.ItemsSource = salesData.ToList();
 
-
                 NameBookComboBox.SelectedItem = null;
                 ShopComboBox.SelectedItem = null;
                 DatePicker.SelectedDate = null;
@@ -201,8 +174,6 @@ namespace Up
                 MessageBox.Show($"Ошибка при добавлении данных: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
-
-
 
         private void UpdateRevenue(Books selectedBook)
         {
@@ -217,16 +188,35 @@ namespace Up
             }
         }
 
-        private void NameBookComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+
+        
+
+
+        private void ShopComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
         }
 
 
 
-        private void ShopComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void NameBookComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-
+            var selectedBook = (Books)NameBookComboBox.SelectedItem;
+            if (selectedBook != null)
+            {
+                // Проверяем статус книги
+                var bookStatus = context.Statuses.FirstOrDefault(s => s.ID_Status == selectedBook.Status_ID)?.StatusName;
+                if (bookStatus == "нет в наличии")
+                {
+                    // Устанавливаем количество в 0, если книга нет в наличии
+                    QuantityTextBox.Text = "0";
+                }
+                else
+                {
+                    // Если книга в наличии, очищаем поле количества
+                    QuantityTextBox.Clear();
+                }
+            }
         }
     }
 }

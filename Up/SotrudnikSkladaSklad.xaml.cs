@@ -73,6 +73,34 @@ namespace Up
             }
         }
 
+        private void StatusComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            try
+            {
+                if (BooksDgr.SelectedItem != null)
+                {
+                    var selectedBook = (Books)BooksDgr.SelectedItem;
+                    var selectedStatus = (Statuses)StatusComboBox.SelectedItem;
+
+     
+                    if (selectedStatus.StatusName == "Нет в наличии")
+                    {
+                        selectedBook.BookAmount = 0;
+                    }
+
+                    selectedBook.Statuses = selectedStatus;
+
+                    context.SaveChanges();
+
+                    BooksDgr.ItemsSource = context.Books.ToList();
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Произошла ошибка при изменении статуса: {ex.Message}");
+            }
+        }
+
 
         private bool ValidateFields()
         {
@@ -106,7 +134,9 @@ namespace Up
             if (!ValidateFields())
                 return;
 
+
             var selectedBook = (Books)NameBookComboBox.SelectedItem;
+
 
             var newSupply = new Supply
             {
@@ -115,29 +145,41 @@ namespace Up
                 Supplier_ID = ((Supplier)SupplierComboBox.SelectedItem).ID_Supplier,
                 Store_ID = ((Stores)ShopComboBox.SelectedItem).ID_Store,
                 SupplyDate = (DateTime)DatePicker.SelectedDate,
-                BookAmount = int.Parse(QuantityTextBox.Text)
+                BookAmount = int.Parse(QuantityTextBox.Text)  
             };
 
-            if (newSupply.BookAmount < 30)
+
+            var bookToUpdate = context.Books.FirstOrDefault(b => b.ID_Book == selectedBook.ID_Book);
+            if (bookToUpdate != null)
             {
-                MessageBox.Show("Количество книг на складе ниже 30", "Низкие запасы", MessageBoxButton.OK, MessageBoxImage.Warning);
+                if (bookToUpdate.BookAmount < newSupply.BookAmount)
+                {
+                    MessageBox.Show("На складе недостаточно книг. Количество будет установлено в 0.",
+                        "Недостаток книг", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    newSupply.BookAmount = 0; 
+                }
+                else
+                {
+                    bookToUpdate.BookAmount -= newSupply.BookAmount;  
+
+                    if (bookToUpdate.BookAmount < 30)
+                    {
+                        MessageBox.Show("Внимание! Количество книг на складе меньше 30.", "Низкие запасы", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    }
+                }
             }
 
             try
             {
+    
                 context.Supply.Add(newSupply);
 
-                var bookToUpdate = context.Books.FirstOrDefault(b => b.ID_Book == selectedBook.ID_Book);
-                if (bookToUpdate != null)
-                {
-                    bookToUpdate.BookAmount -= newSupply.BookAmount;
-                }
-
+    
                 context.SaveChanges();
 
-                MessageBox.Show("Новая запись успешно добавлена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-
                 BooksDgr.ItemsSource = context.Supply.ToList();
+
+                MessageBox.Show("Новая запись успешно добавлена.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
             {
@@ -145,6 +187,10 @@ namespace Up
                 MessageBox.Show($"Ошибка при добавлении записи: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+
+
+
 
 
 
@@ -175,44 +221,87 @@ namespace Up
 
         private void SaveButton_Click_1(object sender, RoutedEventArgs e)
         {
-            var random = new Random();
-            int reportNumber = random.Next(10000000, 99999999);
-            string folderName = "Отчёты";
-            string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-            string folderPath = Path.Combine(desktopPath, folderName);
-
-            if (!Directory.Exists(folderPath))
+            try
             {
-                Directory.CreateDirectory(folderPath);
+                string folderName = "Отчёты";
+                string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+                string folderPath = Path.Combine(desktopPath, folderName);
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                string filePath = GenerateUniqueNamePdf(Path.Combine(folderPath, "Накладная.pdf"));
+                if (filePath == null)
+                {
+                    return; 
+                }
+
+                PdfSharp.Pdf.PdfDocument document = new PdfSharp.Pdf.PdfDocument();
+                PdfPage page = document.AddPage();
+                XGraphics gfx = XGraphics.FromPdfPage(page);
+                XFont font = new XFont("Times New Roman", 12);
+
+                gfx.DrawString("Накладная поставок", new XFont("Times New Roman", 24), XBrushes.Black, new XPoint(250, 40));
+                gfx.DrawString($"№{Path.GetFileNameWithoutExtension(filePath)}", new XFont("Times New Roman", 16), XBrushes.Black, new XPoint(250, 80));
+
+                gfx.DrawString("Список поставок:", font, XBrushes.Black, new XPoint(100, 120));
+
+                int yPosition = 160;
+                var supplies = context.Supply.ToList();
+                foreach (var supply in supplies)
+                {
+                    string supplierName = context.Supplier.FirstOrDefault(s => s.ID_Supplier == supply.Supplier_ID)?.SupplierName;
+                    string supplyDate = supply.SupplyDate.ToString("dd.MM.yyyy");
+
+                    gfx.DrawString($"{supplierName} - {supplyDate}", font, XBrushes.Black, new XPoint(100, yPosition));
+                    yPosition += 20;
+                }
+
+                document.Save(filePath);
+                MessageBox.Show($"Накладная успешно сохранена в папку: {folderName}\nФайл: {Path.GetFileName(filePath)}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
             }
-
-            string fileName = $"Накладная_{reportNumber}.pdf";
-            string filePath = Path.Combine(folderPath, fileName);
-
-            PdfSharp.Pdf.PdfDocument document = new PdfSharp.Pdf.PdfDocument();
-            PdfPage page = document.AddPage();
-            XGraphics gfx = XGraphics.FromPdfPage(page);
-            XFont font = new XFont("Times New Roman", 12);
-
-            gfx.DrawString("Накладная поставок", new XFont("Times New Roman", 24), XBrushes.Black, new XPoint(250, 40));
-            gfx.DrawString($"№{reportNumber}", new XFont("Times New Roman", 16), XBrushes.Black, new XPoint(250, 80));
-
-            gfx.DrawString("Накладная поставок:", font, XBrushes.Black, new XPoint(100, 120));
-
-            int yPosition = 160;
-            var supplies = context.Supply.ToList();
-            foreach (var supply in supplies)
+            catch (Exception ex)
             {
-                string supplierName = context.Supplier.FirstOrDefault(s => s.ID_Supplier == supply.Supplier_ID)?.SupplierName;
-                string supplyDate = supply.SupplyDate.ToString("dd.MM.yyyy");
-
-                gfx.DrawString($"{supplierName} - {supplyDate}", font, XBrushes.Black, new XPoint(100, yPosition));
-                yPosition += 20;
+                MessageBox.Show($"Ошибка при сохранении накладной: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-            document.Save(filePath);
-            MessageBox.Show($"Накладная успешно сохранена в папку: {folderName}\nФайл: {fileName}", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
-
         }
+
+
+
+        private static string GenerateUniqueNamePdf(string pdfFilePath)
+        {
+            try
+            {
+                string directory = Path.GetDirectoryName(pdfFilePath);
+                string reportNumberFilePath = Path.Combine(directory, "lastReportNumber.txt");
+
+                int reportNumber = 1; 
+
+                if (File.Exists(reportNumberFilePath))
+                {
+                    string lastReportNumber = File.ReadAllText(reportNumberFilePath);
+                    if (int.TryParse(lastReportNumber, out int lastNumber))
+                    {
+                        reportNumber = lastNumber + 1; 
+                    }
+                }
+
+                string fileName = $"Накладная_{reportNumber}.pdf";
+                string filePath = Path.Combine(directory, fileName);
+
+
+                File.WriteAllText(reportNumberFilePath, reportNumber.ToString());
+
+                return filePath;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Ошибка при создании уникального имени файла: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return null;
+            }
+        }
+
     }
 }

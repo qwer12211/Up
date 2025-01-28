@@ -34,7 +34,7 @@
             </DataGrid.Resources>
             <DataGrid.Columns>
                 <DataGridTextColumn Binding="{Binding Books.BookTitle}" Header="НАЗВАНИЕ КНИГИ"/>
-                <DataGridTextColumn Binding="{Binding BookAmount}" Header="КОЛИЧЕСТВО"/>
+                <DataGridTextColumn Binding="{Binding BookAmount}" Header="КОЛИЧЕСТВО НА СКЛАДЕ"/>
                 <DataGridTextColumn Binding="{Binding Statuses.StatusName}" Header="СТАТУС"/>
                 <DataGridTextColumn Binding="{Binding SupplyDate, StringFormat=\{0:dd.MM.yyyy\}}" Header="ДАТА ПОСТАВКИ" />
                 <DataGridTextColumn Binding="{Binding Supplier.SupplierName}" Header="ПОСТАВЩИК"/>
@@ -81,7 +81,7 @@
 
         <Button x:Name="LeaveButton" BorderThickness="0" Content="ВЫХОД" Background="#A8DADC" Foreground="#1D3557" FontSize="18" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Center" Width="200" Height="50" Click="LeaveButton_Click_1" FontFamily="Arial Black"/>
 
-        <Button x:Name="ReportButton" BorderThickness="0" Content="СОХРАНИТЬ НАКЛАДНУЮ" Background="#A8DADC" Foreground="#1D3557" FontSize="18" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Width="280" Height="50" Click="SaveButton_Click_1" FontFamily="Arial Black"/>
+        <Button x:Name="ReportButton" BorderThickness="0" Content="СОХРАНИТЬ НАКЛАДНУЮ" Background="#A8DADC" Foreground="#1D3557" FontSize="18" Grid.Row="4" Grid.Column="2" HorizontalAlignment="Center" Width="300" Height="50" Click="SaveButton_Click_1" FontFamily="Arial Black"/>
 
         <Button x:Name="CreateButton" BorderThickness="0" Content="СОЗДАТЬ" Background="#A8DADC" Foreground="#1D3557" FontSize="18" Grid.Row="4" Grid.Column="3" HorizontalAlignment="Center" Width="250" Height="50" Click="Create_Click" FontFamily="Arial Black"/>
     </Grid>
